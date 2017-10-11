@@ -4,13 +4,24 @@
   <title>TinyApp</title>
 </head>
 <body>
+
+
 <ul>
    <% for (var key in urls) { %>
-    <li><h3><%= key %></h3>
-    :
-    <h3><%= urls[key] %></h3>
+
+    <br><li><strong><%= key %> : <%= urls[key] %></strong>
+        <form method="POST" action="/urls/<%= key %>/delete"><button type="submit" value="Submit">Delete</button>
+        </form>
+        <form action="/urls/<%= key %>" method="GET">
+          <button type="submit" value="Submit">Edit</button>
+        </form>
+    </li>
+        <!-- <li>
+          <a href="/urls/<%= key %>">edit</a>
+        </li>
+ -->
+
   <% } %>
-</li>
 
 
 

@@ -4,8 +4,12 @@
 </head>
 <body>
 
+<form action="/urls/edit/<%= shortURL %>" method= "POST">
+  <input type="text" name="longURL" placeholder ="New long URL" >
+  <button type="submit">Update</button>
+</form>
 
-    <h3><%= shortURL %> : <%= longURL %></h3>
+<h3><%= shortURL %> : <%= longURL %></h3>
 
 
 
