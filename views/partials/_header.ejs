@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head><title>Header Page</title>
-</head>
-<body>
+
 <h1> Header title</h1>
 
+<% if (username){ %>
+  <label for="username"><%= username %></label>
+<% } else { %>
 
+  <form method="POST" action="/login" name="username">
+    <input type="text" name="username" placeholder="username">
+    <button type="submit">submit</button>
 
+  </form>
 
+<% } %>
 
-</ul>
-</body>
-</html>

@@ -3,7 +3,9 @@
 <head><title>Show Page</title>
 </head>
 <body>
-
+<header>
+  <% include ./partials/_header %>
+</header>
 <form action="/urls/edit/<%= shortURL %>" method= "POST">
   <input type="text" name="longURL" placeholder ="New long URL" >
   <button type="submit">Update</button>

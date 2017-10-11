@@ -2,7 +2,9 @@ var express = require("express");
 var app = express();
 var PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser')
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser())
 app.set("view engine", "ejs");
 
 
@@ -35,7 +37,6 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let longURL = req.body.longURL;
-  console.log(longURL)
   let shortURL =  generateRandomString()
   urlDatabase[shortURL] = longURL;
 
@@ -43,11 +44,12 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"]
+  };
   res.render("urls_index", templateVars);
 });
-
-
 
 app.get("/urls.json", (req, res) => {
   res.end({urls:urlDatabase});
@@ -74,14 +76,25 @@ app.get("/urls/:id", (req, res) => {
 
   let templateVars = {
     shortURL: req.params.id,
-    longURL: longURL
+    longURL: longURL,
+    username: req.cookies["username"]
   };
 
   res.render("urls_show", templateVars);
 });
-// app.post("urls/edit/:long/",(req,res){
-//   let long = req.body.id;
-//    let editedURL = {
+
+
+app.post("/login",(req,res)=>{
+  let tobi =req.body.username ;
+  // console.log(tobi);
+  res.cookie('username', tobi );
+  res.redirect("/urls");
+
+});
+
+
+
+
 
 
 
