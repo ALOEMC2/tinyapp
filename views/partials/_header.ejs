@@ -3,6 +3,7 @@
 
 <% if (username){ %>
   <label for="username"><%= username %></label>
+  <form method="POST" action="/logout"><button type="submit">Logout</button></form>
 <% } else { %>
 
   <form method="POST" action="/login" name="username">

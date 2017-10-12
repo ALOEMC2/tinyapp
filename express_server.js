@@ -63,9 +63,24 @@ app.get("/", (req, res) => {
   res.end("Hello!");
 });
 
+app.post("/logout",(req,res) => {
+
+    cookie = req.cookies;
+    for (var prop in cookie) {
+        if (!cookie.hasOwnProperty(prop)) {
+            continue;
+        }
+        res.cookie(prop, '', {expires: new Date(0)});
+    }
+    res.redirect('/urls');
+});
+
+
+
+
 app.post("/urls/edit/:id",(req,res)=>{
   let id = req.params.id;
-  console.log(req.body); // = {longURL : 'blah' }
+  // console.log(req.body); // = {longURL : 'blah' }
   urlDatabase[req.params.id] = req.body.longURL
   res.redirect(`/urls/${id}/`);
 });
