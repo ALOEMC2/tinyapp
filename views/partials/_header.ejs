@@ -1,16 +1,24 @@
 
-<h1> Header title</h1>
+<h1> Tiny App</h1>
 
-<% if (username){ %>
-  <label for="username"><%= username %></label>
-  <form method="POST" action="/logout"><button type="submit">Logout</button></form>
+<a href="/urls">  Home Page |</a>
+<a href="/register">  Register Page |</a>
+<a href="/login">  Login Page |</a>
+<a href="/urls/new">  New URL Page |</a>
+
+ <% if (user){ %>
+ <form method="POST" action="/logout">
+  <label for="username">USER ID : <%= user.id %></label>
+    <button type="submit">Logout</button>
+  </form>
 <% } else { %>
 
   <form method="POST" action="/login" name="username">
-    <input type="text" name="username" placeholder="username">
-    <button type="submit">submit</button>
+    <!-- <input type="text" name="username" placeholder="username">
+    <button type="submit">submit</button> -->
 
   </form>
 
 <% } %>
 
+<hr>
