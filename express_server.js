@@ -7,7 +7,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser())
 app.set("view engine", "ejs");
 
-
 function generateRandomString(){
   const alphabet =
   'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -23,17 +22,41 @@ function generateRandomString(){
 // return Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
 // }
 
-var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+// var urlDatabase = {
+//  {"b2xVn2": "http://www.lighthouselabs.ca"},
+//  {"9sm5xK": "http://www.google.com"},
+//  {"MB7ca1": "http://www.yahoo.com"}
+// };
 
-};
+var urlDatabase = {
+  "b2xVn2": {
+    url: "http://www.lighthouselabs.ca",
+    user_id: "userRandomID"
+  },
+  "9sm5xK": {
+    url: "http://www.google.com",
+    user_id: "user2RandomID"
+  },
+  "MB7ca1": {
+    url: "http:www.sleep.com",
+    user_id: "user3RandomID"
+  },
+  "KTb40Q": {
+    url: "http:www.beer.com",
+    user_id: "user3RandomID"
+  },
+  "3ocUjV": {
+    url: "http:www.canoe.ca",
+    user_id: "user3RandomID"
+  }
+}
 
 const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "dog",
+
   },
  "user2RandomID": {
     id: "user2RandomID",
@@ -72,9 +95,14 @@ app.post("/login",(req,res)=>{
     if ((users[x].email == email)&&(users[x].password == password)){
       res.cookie('user_id',users[x].id);
       res.redirect('/urls');
+      return;
+    }
+    else{
+      console.log("error")
+    }
+   }
 
-    } else{console.log("error")}
-   }res.redirect('/login');
+   res.redirect('/login');
 })
   // check if pw == this pw
   // if then redirect to urls
@@ -89,13 +117,17 @@ app.get("/urls/new", (req, res) => {
     res.redirect("/login");
     return;
   }
-  var templateVars = {user: users[req.cookies['user_id']]}
+  var templateVars = {
+    user: users[req.cookies['user_id']],
+    urls: urlDatabase
+  }
   res.render("urls_new", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL]
   let shortURL = req.params.shortURL
+
   res.redirect(longURL);
 });
 
@@ -108,7 +140,9 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let longURL = req.body.longURL;
-  let shortURL =  generateRandomString()
+  let shortURL =  generateRandomString();
+  // let userID = urlDatabase[req.params.id];
+  // console.log(userID);
   urlDatabase[shortURL] = longURL;
 
   res.redirect(`/urls/${shortURL}`);
@@ -168,7 +202,7 @@ app.post("/register",(req,res)=>{
   let newEmail = email;
   let password = req.body.password;
   let id = generateRandomString();
-  var templateVars = {
+  let templateVars = {
       urls: urlDatabase,
       user: users[req.cookies['user_id']],
       errors: {
@@ -219,7 +253,7 @@ app.post("/register",(req,res)=>{
     hasErrors = false;
     let newUser = {"id":id,"email":email,"password":password};// this one
     res.cookie('user_id',newUser.id);
-    console.log(newUser);
+    //console.log(newUser);
     res.redirect("/urls");// redirect will not work with templateVars
   }
       //console.log(users[x].email)
@@ -232,22 +266,43 @@ app.post("/register",(req,res)=>{
 });
 
 app.post("/urls/edit/:id",(req,res)=>{
-  let id = req.params.id;
+  // console.log(urlDatabase[req.params.id].user_id)
+  console.log(req.body, "body");
+  let shortURL = req.params.id;
   // console.log(req.body); // = {longURL : 'blah' }
-  urlDatabase[req.params.id] = req.body.longURL
-  res.redirect(`/urls/${id}/`);
+  // urlDatabase[shortURL] = req.body.id;
+
+  // 1) Save to database
+  if(urlDatabase[shortURL]){
+    urlDatabase[shortURL].url = req.body.longURL
+  }
+
+  // 2) Retrieve from databse; store in longURL
+  let longURL = urlDatabase[shortURL];
+
+  let templateVars = {
+    shortURL: shortURL,
+    longURL: longURL,
+    user: users[req.cookies['user_id']],
+    urls: urlDatabase
+  };
+// console.log(id)
+    // res.redirect("/urls/new");// redirect will not work with templateVars
+
+  res.render("urls_show", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  // TODO: Get longurl from urls database for a given short url
-  let longURL = urlDatabase[req.params.id]
+  // TODO: Get url from urls database for a given short url
+  let longURL = urlDatabase[req.params.id];
 
   let templateVars = {
     shortURL: req.params.id,
-    longURL: longURL,
-    user: users[req.cookies['user_id']]
+    longURL: longURL, // object
+    user: users[req.cookies['user_id']],
+    urls: urlDatabase
   };
-
+  console.log(urlDatabase[req.params.id])
   res.render("urls_show", templateVars);
 });
 

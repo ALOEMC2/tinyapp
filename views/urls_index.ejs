@@ -10,9 +10,11 @@
 </header>
 
 <ul>
-   <% for (var key in urls) { %>
 
-    <br><li><strong><%= key %> : <%= urls[key] %></strong>
+  <!-- <p><%=user.id%></p> -->
+   <% for (var key in urls) { %>
+        <%if (user.id  === urls[key].user_id){ %>
+    <br><li><strong><%= key %> : <%= urls[key].user_id %> : <%= urls[key].url %></strong>
         <form method="POST" action="/urls/<%= key %>/delete"><button type="submit" value="Submit">Delete</button>
         </form>
         <form action="/urls/<%= key %>" method="GET">
@@ -22,9 +24,14 @@
 
 
   <% } %>
-
-
-
+<%}%>
+<!-- console.log(key+  ":" + urls[key].url +":"+urls[key].user_id); -->
+<!-- var users_id = "userRandomID";
+for(var key in urls){
+  if(users_id == urls[key].user_id){
+  console.log(key+  ":" + urls[key].url +":"+urls[key].user_id);
+}
+} -->
 </ul>
 </body>
 </html>
