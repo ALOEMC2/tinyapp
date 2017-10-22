@@ -272,14 +272,18 @@ app.post("/urls/edit/:id", (req, res) =>{
   let shortURL = req.params.id;
   // 1) Save to database
   if(urlDatabase[shortURL]){
-    urlDatabase[shortURL].url = req.body.longURL
+    urlDatabase[shortURL].url = req.body.longURL;
   }
   // 2) Retrieve from databse; store in longURL
-  let longURL = urlDatabase[shortURL];
+  let longURL = urlDatabase[shortURL].url;//added .url
+  console.log(longURL)
+  console.log(shortURL)
+
   let templateVars = {
     shortURL: shortURL,
     longURL: longURL,
-    user: users[req.session.user_id['user_id']],
+
+    user: users[req.session.user_id],//['user_id']
     urls: urlDatabase
   }
   res.render("urls_show", templateVars);
@@ -287,7 +291,7 @@ app.post("/urls/edit/:id", (req, res) =>{
 
 app.get("/urls/:id", (req, res) => {
   // TODO: Get url from urls database for a given short url
-  let longURL = urlDatabase[req.params.id].url;
+  let longURL = urlDatabase[req.params.id].url;//[req.params.id].url
   let shortURL = req.params.id;
   let user = users[req.session.user_id];
   let templateVars = {
@@ -296,9 +300,9 @@ app.get("/urls/:id", (req, res) => {
     user: user,
     urls: urlDatabase
   }
-  console.log(longURL)
-  console.log(shortURL)
-  console.log(user)
+   console.log(longURL)
+   console.log(shortURL)
+  // console.log(user)
   res.render("urls_show", templateVars);
 });
 
